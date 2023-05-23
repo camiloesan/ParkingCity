@@ -1,24 +1,52 @@
 package mx.uv.fei.parkingcity.logic;
 
-import javafx.scene.shape.Rectangle;
+import java.sql.Date;
 
-public class ParkingSlot extends Rectangle implements Shape {
-    Rectangle parkingSlot;
+public class ParkingSlot {
+    int slot_id;
+    String available;
+    Date check_in;
+    Date check_out;
 
-    public ParkingSlot(Rectangle parkingSlot) {
-        this.parkingSlot = parkingSlot;
+    public ParkingSlot(int slot_id, String available, Date check_in, Date check_out) {
+        this.slot_id = slot_id;
+        this.available = available;
+        this.check_in = check_in;
+        this.check_out = check_out;
     }
 
-    @Override
-    public Shape makeCopy() {
-        Shape shapeObject = null;
+    public ParkingSlot() {
+    }
 
-        try {
-            shapeObject = (Shape) super.clone();
-        } catch (CloneNotSupportedException e) {
-            e.getStackTrace();
-        }
+    public int getSlot_id() {
+        return slot_id;
+    }
 
-        return shapeObject;
+    public void setSlot_id(int slot_id) {
+        this.slot_id = slot_id;
+    }
+
+    public String getAvailable() {
+        return available;
+    }
+
+    public void setAvailable(String available) {
+        this.available = available;
+    }
+
+    public Date getCheck_in() {
+        return check_in;
+    }
+
+    public void setCheck_in(Date check_in) {
+        this.check_in = check_in;
+    }
+
+    public Date getCheck_out() {
+        return check_out;
+    }
+
+    public void setCheck_out(Date check_out) {
+        this.check_out = check_out;
     }
 }

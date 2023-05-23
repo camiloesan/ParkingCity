@@ -11,7 +11,6 @@ import java.io.IOException;
 
 public class MainStage extends Application {
     private static Scene scene;
-    public static final int HEIGHT_OFFSET = 44;
 
     public static void main(String[] args) {
         launch();
