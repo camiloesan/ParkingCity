@@ -12,12 +12,13 @@ import java.util.List;
 
 public class ParkingSlotsDAO implements IParkingSlotsDAO {
     @Override
-    public List<ParkingSlot> getAvailableParkingSlots() throws SQLException {
-        String query = "SELECT * FROM nivel0"; //maybe search by level or something
+    public List<ParkingSlot> getAvailableParkingSlotsByLevel(String levelName) throws SQLException {
+        String query = "SELECT * FROM " + levelName;
         DatabaseManager databaseManager = new DatabaseManager();
         Connection connection = databaseManager.getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement(query);
+        preparedStatement.setString(1, levelName);
         ResultSet resultSet = preparedStatement.executeQuery();
         databaseManager.closeConnection();
 
