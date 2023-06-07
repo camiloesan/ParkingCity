@@ -7,22 +7,19 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19"
-            xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.uv.fei.parkingcity.gui.TicketWindowController">
+<AnchorPane prefHeight="700.0" prefWidth="1000.0" xmlns="http://javafx.com/javafx/19" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mx.uv.fei.parkingcity.gui.TicketWindowController">
    <ImageView fitHeight="561.0" fitWidth="684.0" layoutX="158.0" pickOnBounds="true" preserveRatio="true">
-      <Image url="@../../../../../Large-Raffle-Ticket.png"/>
+      <Image url="@../../../../../Large-Raffle-Ticket.png" />
    </ImageView>
-   <Button layoutX="50.0" layoutY="625.0" mnemonicParsing="false" onAction="#returnToMainMenu" text="Regresar"/>
+   <Button layoutX="50.0" layoutY="625.0" mnemonicParsing="false" onAction="#returnToMainMenu" text="Regresar" />
    <Label fx:id="labelCheckIn" layoutX="253.0" layoutY="181.0" prefHeight="25.0" prefWidth="320.0" text="Check_In: ">
       <font>
-         <Font size="18.0"/>
+         <Font size="18.0" />
       </font>
    </Label>
-   <Label fx:id="labelParkingSlotID" layoutX="253.0" layoutY="238.0" prefHeight="25.0" prefWidth="450.0"
-          text="Lugar de estacionamiento: ">
+   <Label fx:id="labelParkingSlotID" layoutX="253.0" layoutY="238.0" prefHeight="25.0" prefWidth="450.0" text="Lugar de estacionamiento: ">
       <font>
-         <Font size="18.0"/>
+         <Font size="18.0" />
       </font>
    </Label>
 </AnchorPane>
