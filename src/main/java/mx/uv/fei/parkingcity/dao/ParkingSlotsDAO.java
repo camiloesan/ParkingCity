@@ -32,4 +32,19 @@ public class ParkingSlotsDAO implements IParkingSlotsDAO {
 
         return availableParkingSlotList;
     }
+    
+    @Override
+    public int reserveSlot(String levelName, int slotID) throws SQLException {
+        int result;
+        String sqlQuery = "UPDATE " + levelName + " SET available = 'no' WHERE slot_id = (?)";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+        
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, slotID);
+        result = preparedStatement.executeUpdate();
+        
+        databaseManager.closeConnection();
+        return result;
+    }
 }
