@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import mx.uv.fei.parkingcity.dao.ParkingSlotsDAO;
+import mx.uv.fei.parkingcity.dao.TicketDAO;
 import mx.uv.fei.parkingcity.logic.ParkingSlot;
 
 import java.io.IOException;
@@ -25,6 +26,7 @@ public class SlotManagementController {
     private static final String FIRST_FLOOR = "nivel1";
     private static final String SECOND_FLOOR = "nivel2";
     private static final String THIRD_FLOOR = "nivel3";
+    public String selectedFloor;
     public static int selectedParkingSlot = 0;
 
     @FXML
@@ -44,6 +46,7 @@ public class SlotManagementController {
         anchorPaneCanvas.getChildren().clear();
         try {
             drawParkingSlots(parkingSlotsDAO.getAvailableParkingSlotsByLevel(PB));
+            selectedFloor = PB;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
@@ -56,6 +59,7 @@ public class SlotManagementController {
         anchorPaneCanvas.getChildren().clear();
         try {
             drawParkingSlots(parkingSlotsDAO.getAvailableParkingSlotsByLevel(FIRST_FLOOR));
+            selectedFloor = FIRST_FLOOR;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
@@ -68,6 +72,7 @@ public class SlotManagementController {
         anchorPaneCanvas.getChildren().clear();
         try {
             drawParkingSlots(parkingSlotsDAO.getAvailableParkingSlotsByLevel(SECOND_FLOOR));
+            selectedFloor = SECOND_FLOOR;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
@@ -80,9 +85,17 @@ public class SlotManagementController {
         anchorPaneCanvas.getChildren().clear();
         try {
             drawParkingSlots(parkingSlotsDAO.getAvailableParkingSlotsByLevel(THIRD_FLOOR));
+            selectedFloor = THIRD_FLOOR;
         } catch (SQLException sqlException) {
             sqlException.printStackTrace();
         }
+    }
+    
+    private void updateSlot(String levelName, int slotID) throws SQLException {
+        ParkingSlotsDAO parkingSlotsDAO = new ParkingSlotsDAO();
+        TicketDAO ticketDAO = new TicketDAO();
+        parkingSlotsDAO.reserveSlot(levelName, slotID);
+        ticketDAO.registerEntry(slotID);
     }
 
     private void confirmSelectedParkingSpot(int id) throws IOException {
@@ -148,7 +161,8 @@ public class SlotManagementController {
                     try {
                         selectedParkingSlot = availableParkingSlotObject.getSlot_id();
                         confirmSelectedParkingSpot(availableParkingSlotObject.getSlot_id());
-                    } catch (IOException ex) {
+                        updateSlot(selectedFloor,availableParkingSlotObject.getSlot_id());
+                    } catch (IOException | SQLException ex) {
                         throw new RuntimeException(ex);
                     }
                 } else {
