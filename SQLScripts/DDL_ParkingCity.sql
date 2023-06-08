@@ -25,8 +25,7 @@ create table tickets (
     check_in  datetime not null,
     check_out datetime default null,
     slot_id int not null,
-    constraint tickets_pk primary key (ticket_id),
-    constraint tickets_nivel0_slot_id_fk foreign key (slot_id) references nivel0 (slot_id) on delete cascade
+    constraint tickets_pk primary key (ticket_id)
 );
 
 CREATE TABLE pagos (
