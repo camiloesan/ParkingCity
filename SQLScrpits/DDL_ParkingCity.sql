@@ -33,7 +33,8 @@ create table tickets (
 );
 
 CREATE TABLE pagos (
-    pago_id int auto_incrment primary key,
+    pago_id int not null auto_increment,
     nivel int not null,
-    slot int not null
+    slot int not null,
+    PRIMARY KEY (pago_id)
 );
