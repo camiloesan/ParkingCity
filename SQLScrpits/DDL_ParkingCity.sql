@@ -31,3 +31,9 @@ create table tickets (
         foreign key (slot_id) references nivel0 (slot_id)
             on delete cascade
 );
+
+CREATE TABLE pagos (
+    pago_id int auto_incrment primary key,
+    nivel int not null,
+    slot int not null
+);
