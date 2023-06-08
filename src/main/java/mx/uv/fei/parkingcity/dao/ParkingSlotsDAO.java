@@ -27,8 +27,6 @@ public class ParkingSlotsDAO implements IParkingSlotsDAO {
             ParkingSlot parkingSlot = new ParkingSlot();
             parkingSlot.setSlot_id(resultSet.getInt("slot_id"));
             parkingSlot.setAvailable(resultSet.getString("available"));
-            parkingSlot.setCheck_in(resultSet.getDate("check_in"));
-            parkingSlot.setCheck_out(resultSet.getDate("check_out"));
             availableParkingSlotList.add(parkingSlot);
         }
 
