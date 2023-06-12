@@ -93,9 +93,7 @@ public class SlotManagementController {
     
     private void updateSlot(String levelName, int slotID) throws SQLException {
         ParkingSlotsDAO parkingSlotsDAO = new ParkingSlotsDAO();
-        TicketDAO ticketDAO = new TicketDAO();
         parkingSlotsDAO.reserveSlot(levelName, slotID);
-        ticketDAO.registerEntry(slotID);
     }
 
     private void confirmSelectedParkingSpot(int id) throws IOException {
@@ -110,6 +108,7 @@ public class SlotManagementController {
     }
 
     private void drawParkingSlots(List<ParkingSlot> listAvailableParkingSlots) throws SQLException {
+        TicketDAO ticketDAO = new TicketDAO();
         int posX = 120;
         int posY = 46;
         int counter = 0;
@@ -162,6 +161,7 @@ public class SlotManagementController {
                         selectedParkingSlot = availableParkingSlotObject.getSlot_id();
                         confirmSelectedParkingSpot(availableParkingSlotObject.getSlot_id());
                         updateSlot(selectedFloor,availableParkingSlotObject.getSlot_id());
+                        ticketDAO.registerEntry(availableParkingSlotObject.getSlot_id());
                     } catch (IOException | SQLException ex) {
                         throw new RuntimeException(ex);
                     }
