@@ -3,9 +3,9 @@ package mx.uv.fei.parkingcity.gui;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
-import javafx.util.converter.LocalDateTimeStringConverter;
+import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
-import mx.uv.fei.parkingcity.logic.Ticket;
+import mx.uv.fei.parkingcity.logic.Payment;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -67,6 +67,36 @@ public class CheckOutController {
 
     @FXML
     private void pay() {
+        PaymentDAO paymentDAO = new PaymentDAO();
+        Payment payment = new Payment();
+        int level = 0;
+
+        if (getSlotID() >= 101 && getSlotID() <= 150) {
+            level = 1;
+        } else if (getSlotID() >= 201 && getSlotID() <= 250) {
+            level = 2;
+        } else if (getSlotID() >= 301 && getSlotID() <= 350) {
+            level = 3;
+        }
+
+        payment.setLevel(level);
+        payment.setSlotID(getSlotID());
+
+        int result = 0;
+        try {
+            result = paymentDAO.registerPayment(payment);
+        } catch (SQLException sqlException) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setContentText("Error al conectarse con la base de datos");
+            error.showAndWait();
+            sqlException.printStackTrace();
+        }
+
+        if (result == 1) {
+            Alert error = new Alert(Alert.AlertType.INFORMATION);
+            error.setContentText("Pago hecho correctamente");
+            error.showAndWait();
+        }
 
     }
 
