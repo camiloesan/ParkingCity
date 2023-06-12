@@ -40,7 +40,7 @@ public class MainStage extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("SlotManagement.fxml"), 1000, 700);
+        scene = new Scene(loadFXML("MainMenu.fxml"), 1000, 700);
         stage.setTitle("Parking City");
         stage.setScene(scene);
         stage.show();

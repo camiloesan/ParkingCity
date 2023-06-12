@@ -7,14 +7,17 @@ create table nivel0 (
     slot_id int not null primary key,
     available enum('yes', 'no') DEFAULT 'yes',
     UNIQUE (slot_id));
+
 create table nivel1 (
     slot_id int not null primary key,
     available enum('yes', 'no') DEFAULT 'yes',
     UNIQUE (slot_id));
+
 create table nivel2 (
     slot_id int not null primary key,
     available enum('yes', 'no') DEFAULT 'yes',
     UNIQUE (slot_id));
+
 create table nivel3 (
     slot_id int not null primary key,
     available enum('yes', 'no') DEFAULT 'yes',
@@ -32,5 +35,6 @@ CREATE TABLE pagos (
     pago_id int not null auto_increment,
     nivel int not null,
     slot int not null,
+    payment_datetime datetime not null,
     PRIMARY KEY (pago_id)
 );

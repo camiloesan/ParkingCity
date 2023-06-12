@@ -1,10 +1,14 @@
 package mx.uv.fei.parkingcity.dao;
 
 import mx.uv.fei.parkingcity.dataaccess.DatabaseManager;
+import mx.uv.fei.parkingcity.logic.Ticket;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 public class TicketDAO implements ITicketDAO{
     @Override
@@ -37,4 +41,73 @@ public class TicketDAO implements ITicketDAO{
         databaseManager.closeConnection();
         return result;
     }
+
+    @Override
+    public Ticket getTicketByTicketID(int ticketID) throws SQLException {
+        String query = "SELECT * FROM tickets WHERE ticket_id = ?";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, ticketID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        Ticket ticket = new Ticket();
+
+        while (resultSet.next()) {
+            ticket.setTicketID(resultSet.getInt("ticket_id"));
+            ticket.setCheckIN(resultSet.getString("check_id"));
+            ticket.setCheckOUT(resultSet.getString("check_out"));
+            ticket.setSlotID(resultSet.getInt("slot_id"));
+        }
+
+        databaseManager.closeConnection();
+
+        return ticket;
+    }
+
+    @Override
+    public int getSlotIDByTicketID(int ticketID) throws SQLException {
+        String query = "SELECT slot_id FROM tickets WHERE ticket_id = ?";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, ticketID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int result = 0;
+        while (resultSet.next()) {
+            result = resultSet.getInt("slot_id");
+        }
+
+        databaseManager.closeConnection();
+
+        return result;
+    }
+
+    @Override
+    public LocalDateTime getCheckInByTicketID(int ticketID) throws SQLException {
+        String query = "SELECT check_in FROM tickets WHERE ticket_id = ?";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, ticketID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        String checkIn = null;
+        while (resultSet.next()) {
+            checkIn = resultSet.getString("check_in");
+        }
+        LocalDateTime result = LocalDateTime.parse(checkIn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+        databaseManager.closeConnection();
+
+        return result;
+    }
+
 }

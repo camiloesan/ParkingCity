@@ -173,4 +173,10 @@ public class SlotManagementController {
             anchorPaneCanvas.getChildren().add(rectangleParkingSlot);
         }
     }
+
+    @FXML
+    private void redirectToMainMenu() throws IOException {
+        MainStage.changeView("MainMenu.fxml", 1000, 700);
+    }
+
 }
