@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 public class TicketDAO implements ITicketDAO{
     @Override
@@ -108,6 +110,67 @@ public class TicketDAO implements ITicketDAO{
         databaseManager.closeConnection();
 
         return result;
+    }
+
+    @Override
+    public int getLastTicketID() throws SQLException {
+        String query = "select max(ticket_id) from tickets";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+        int result = 0;
+        ResultSet resultSet = preparedStatement.executeQuery();
+        while(resultSet.next()) {
+            result = resultSet.getInt("max(ticket_id)");
+        }
+
+        databaseManager.closeConnection();
+        return result;
+    }
+
+    @Override
+    public List<Integer> getTicketsWithoutPay() throws SQLException {
+        String query = "SELECT tickets.ticket_id FROM tickets " +
+                "INNER JOIN pagos on pagos.ticket_id = tickets.ticket_id " +
+                "WHERE pagos.state = 'pendiente'";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Integer> slotsList = new ArrayList<>();
+        while (resultSet.next()) {
+            slotsList.add(resultSet.getInt("ticket_id"));
+        }
+
+        databaseManager.closeConnection();
+
+        return slotsList;
+    }
+
+    @Override
+    public List<Integer> getTicketsPay() throws SQLException {
+        String query = "SELECT tickets.ticket_id FROM tickets " +
+                "INNER JOIN pagos on pagos.ticket_id = tickets.ticket_id " +
+                "WHERE pagos.state = 'pagado'";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        List<Integer> slotsList = new ArrayList<>();
+        while (resultSet.next()) {
+            slotsList.add(resultSet.getInt("ticket_id"));
+        }
+
+        databaseManager.closeConnection();
+
+        return slotsList;
     }
 
 }

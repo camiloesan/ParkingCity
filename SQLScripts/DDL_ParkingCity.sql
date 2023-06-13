@@ -25,7 +25,7 @@ create table nivel3 (
 
 create table tickets (
     ticket_id int auto_increment,
-    check_in  datetime not null,
+    check_in datetime not null,
     check_out datetime default null,
     slot_id int not null,
     constraint tickets_pk primary key (ticket_id)
@@ -33,8 +33,9 @@ create table tickets (
 
 CREATE TABLE pagos (
     pago_id int not null auto_increment,
-    nivel int not null,
-    slot int not null,
-    payment_datetime datetime not null,
-    PRIMARY KEY (pago_id)
+    ticket_id int,
+    state enum('pagado', 'pendiente') default 'pendiente',
+    payment_datetime datetime,
+    PRIMARY KEY (pago_id),
+    CONSTRAINT FK_ticket_id FOREIGN KEY (ticket_id) REFERENCES tickets (ticket_id) ON DELETE CASCADE ON UPDATE CASCADE
 );

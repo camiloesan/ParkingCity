@@ -1,11 +1,12 @@
 package mx.uv.fei.parkingcity.gui;
 
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
-import mx.uv.fei.parkingcity.logic.Payment;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -19,12 +20,12 @@ public class CheckOutController {
     private Label labelParkingSlotID;
     @FXML
     private Label labelPaymentTotal;
+    @FXML
+    private ComboBox<Integer> comboBoxParkingPlace;
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     @FXML
     private void initialize() {
-        labelCheckOut.setText("CheckOut: " + dateTimeFormatter.format(LocalDateTime.now()));
-        labelParkingSlotID.setText("Lugar de estacionamiento: " + getSlotID());
-        labelPaymentTotal.setText("Total a pagar: $" + getTotalPayment());
+        fillComboBoxParkingSlots();
     }
 
     private int getTotalPayment() {
@@ -55,7 +56,7 @@ public class CheckOutController {
         TicketDAO ticketDAO = new TicketDAO();
         int result = 0;
         try {
-            result = ticketDAO.getSlotIDByTicketID(1);
+            result = ticketDAO.getSlotIDByTicketID(comboBoxParkingPlace.getValue());
         } catch (SQLException sqlException) {
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setContentText("Error al recuperar el lugar de estacionamiento");
@@ -66,25 +67,34 @@ public class CheckOutController {
     }
 
     @FXML
+    private void fillTicket() {
+        if (comboBoxParkingPlace.getSelectionModel().getSelectedItem() != null) {
+            labelCheckOut.setText("CheckOut: " + dateTimeFormatter.format(LocalDateTime.now()));
+            labelParkingSlotID.setText("Lugar de estacionamiento: " + getSlotID());
+            labelPaymentTotal.setText("Total a pagar: $" + getTotalPayment());
+        }
+    }
+
+    private void fillComboBoxParkingSlots() {
+        TicketDAO ticketDAO = new TicketDAO();
+        try {
+            comboBoxParkingPlace.setItems(
+                    FXCollections.observableList(ticketDAO.getTicketsWithoutPay()));
+        } catch (SQLException sqlException) {
+            Alert error = new Alert(Alert.AlertType.ERROR);
+            error.setContentText("Error al recuperar el lugares de estacionamiento por pagar");
+            error.showAndWait();
+            sqlException.printStackTrace();
+        }
+    }
+
+    @FXML
     private void pay() {
         PaymentDAO paymentDAO = new PaymentDAO();
-        Payment payment = new Payment();
-        int level = 0;
-
-        if (getSlotID() >= 101 && getSlotID() <= 150) {
-            level = 1;
-        } else if (getSlotID() >= 201 && getSlotID() <= 250) {
-            level = 2;
-        } else if (getSlotID() >= 301 && getSlotID() <= 350) {
-            level = 3;
-        }
-
-        payment.setLevel(level);
-        payment.setSlotID(getSlotID());
 
         int result = 0;
         try {
-            result = paymentDAO.registerPayment(payment);
+            result = paymentDAO.updatePayment(comboBoxParkingPlace.getValue());
         } catch (SQLException sqlException) {
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setContentText("Error al conectarse con la base de datos");
@@ -96,6 +106,12 @@ public class CheckOutController {
             Alert error = new Alert(Alert.AlertType.INFORMATION);
             error.setContentText("Pago hecho correctamente");
             error.showAndWait();
+            comboBoxParkingPlace.getItems().clear();
+            comboBoxParkingPlace.getSelectionModel().clearSelection();
+            fillComboBoxParkingSlots();
+            labelCheckOut.setText("CheckOut: ");
+            labelParkingSlotID.setText("Lugar de estacionamiento: ");
+            labelPaymentTotal.setText("Total a pagar: ");
         }
 
     }

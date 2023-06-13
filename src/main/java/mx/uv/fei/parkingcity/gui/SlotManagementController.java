@@ -9,6 +9,7 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import mx.uv.fei.parkingcity.dao.ParkingSlotsDAO;
+import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
 import mx.uv.fei.parkingcity.logic.ParkingSlot;
 
@@ -109,6 +110,7 @@ public class SlotManagementController {
 
     private void drawParkingSlots(List<ParkingSlot> listAvailableParkingSlots) throws SQLException {
         TicketDAO ticketDAO = new TicketDAO();
+        PaymentDAO paymentDAO = new PaymentDAO();
         int posX = 120;
         int posY = 46;
         int counter = 0;
@@ -162,6 +164,7 @@ public class SlotManagementController {
                         confirmSelectedParkingSpot(availableParkingSlotObject.getSlot_id());
                         updateSlot(selectedFloor,availableParkingSlotObject.getSlot_id());
                         ticketDAO.registerEntry(availableParkingSlotObject.getSlot_id());
+                        paymentDAO.registerPayment(ticketDAO.getLastTicketID());
                     } catch (IOException | SQLException ex) {
                         throw new RuntimeException(ex);
                     }

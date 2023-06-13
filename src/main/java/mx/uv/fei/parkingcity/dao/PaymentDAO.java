@@ -1,7 +1,6 @@
 package mx.uv.fei.parkingcity.dao;
 
 import mx.uv.fei.parkingcity.dataaccess.DatabaseManager;
-import mx.uv.fei.parkingcity.logic.Payment;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,15 +12,14 @@ import java.time.format.DateTimeFormatter;
 public class PaymentDAO implements IPaymentDAO {
 
     @Override
-    public int registerPayment(Payment payment) throws SQLException {
+    public int registerPayment(int ticketID) throws SQLException {
         int result;
-        String sqlQuery = "INSERT INTO pagos (nivel, slot, payment_datetime) VALUES (?,?,NOW())";
+        String sqlQuery = "INSERT INTO pagos (ticket_id) VALUES (?)";
         DatabaseManager databaseManager = new DatabaseManager();
         Connection connection = databaseManager.getConnection();
 
         PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
-        preparedStatement.setInt(1, payment.getLevel());
-        preparedStatement.setInt(2, payment.getSlotID());
+        preparedStatement.setInt(1, ticketID);
         result = preparedStatement.executeUpdate();
 
         databaseManager.closeConnection();
@@ -47,6 +45,21 @@ public class PaymentDAO implements IPaymentDAO {
 
         databaseManager.closeConnection();
 
+        return result;
+    }
+
+    @Override
+    public int updatePayment(int ticketID) throws SQLException {
+        int result;
+        String sqlQuery = "UPDATE pagos SET state = 'pagado', payment_datetime = NOW() WHERE ticket_id = (?)";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, ticketID);
+        result = preparedStatement.executeUpdate();
+
+        databaseManager.closeConnection();
         return result;
     }
 }

@@ -8,4 +8,6 @@ import java.util.List;
 public interface IParkingSlotsDAO {
     List<ParkingSlot> getAvailableParkingSlotsByLevel(String levelName) throws SQLException;
     int reserveSlot(String levelName, int slotID) throws SQLException;
+
+    int openSlot(String levelName, int slotID) throws SQLException;
 }
