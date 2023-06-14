@@ -13,7 +13,7 @@ public class MainMenuController {
 
     @FXML
     private void redirectToCheckOut() throws IOException {
-        MainStage.changeView("CheckOut.fxml", 1000, 700);
+        MainStage.changeView("SlotToPay.fxml", 1000, 700);
     }
 
     @FXML
