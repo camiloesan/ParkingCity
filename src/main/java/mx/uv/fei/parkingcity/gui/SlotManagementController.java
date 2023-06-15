@@ -8,6 +8,8 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
 import mx.uv.fei.parkingcity.dao.ParkingSlotsDAO;
 import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
@@ -141,6 +143,12 @@ public class SlotManagementController {
             rectangleParkingSlot.setLayoutX(posX);
             rectangleParkingSlot.setLayoutY(posY);
 
+            Text slotIdText = new Text(String.valueOf(availableParkingSlotObject.getSlot_id()));
+            slotIdText.setFont(Font.font("Canterell", 14));
+            slotIdText.setFill(Color.WHITE);
+            slotIdText.setX(posX + 10);
+            slotIdText.setY(posY + 25);
+
             var scaleTrans = new ScaleTransition(javafx.util.Duration.millis(250), rectangleParkingSlot);
             scaleTrans.setFromX(1.0);
             scaleTrans.setFromY(1.0);
@@ -173,7 +181,7 @@ public class SlotManagementController {
                     alert.show();
                 }
             });
-            anchorPaneCanvas.getChildren().add(rectangleParkingSlot);
+            anchorPaneCanvas.getChildren().addAll(rectangleParkingSlot, slotIdText);
         }
     }
 
