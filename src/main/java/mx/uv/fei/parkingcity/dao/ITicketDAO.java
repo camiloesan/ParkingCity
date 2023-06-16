@@ -11,6 +11,9 @@ public interface ITicketDAO {
     int registerExit(int ticketID) throws SQLException;
     Ticket getTicketByTicketID(int ticketID) throws SQLException;
     int getSlotIDByTicketID(int ticketID) throws SQLException;
+
+    int getTicketIDBySlotID(int slotID) throws SQLException;
+
     LocalDateTime getCheckInByTicketID(int ticketID) throws SQLException;
 
     int getLastTicketID() throws SQLException;

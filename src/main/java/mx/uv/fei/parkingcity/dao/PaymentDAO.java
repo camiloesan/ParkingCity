@@ -62,4 +62,19 @@ public class PaymentDAO implements IPaymentDAO {
         databaseManager.closeConnection();
         return result;
     }
+
+    @Override
+    public int updatePaymentToPay(int ticketID) throws SQLException {
+        int result;
+        String sqlQuery = "UPDATE pagos SET state = 'pendiente', payment_datetime = null WHERE ticket_id = (?)";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(sqlQuery);
+        preparedStatement.setInt(1, ticketID);
+        result = preparedStatement.executeUpdate();
+
+        databaseManager.closeConnection();
+        return result;
+    }
 }

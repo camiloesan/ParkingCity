@@ -10,4 +10,6 @@ public interface IPaymentDAO {
     LocalDateTime getDateTimeByPaymentID(int paymentID) throws SQLException;
 
     int updatePayment(int ticketID) throws SQLException;
+
+    int updatePaymentToPay(int ticketID) throws SQLException;
 }

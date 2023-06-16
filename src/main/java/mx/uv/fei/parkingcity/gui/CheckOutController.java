@@ -7,6 +7,8 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
+import mx.uv.fei.parkingcity.logic.ParkingSlot;
+import mx.uv.fei.parkingcity.logic.TransferTicket;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -20,12 +22,10 @@ public class CheckOutController {
     private Label labelParkingSlotID;
     @FXML
     private Label labelPaymentTotal;
-    @FXML
-    private ComboBox<Integer> comboBoxParkingPlace;
     DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern("yyyy/MM/dd HH:mm:ss");
     @FXML
     private void initialize() {
-        fillComboBoxParkingSlots();
+        fillTicket();
     }
 
     private int getTotalPayment() {
@@ -33,7 +33,7 @@ public class CheckOutController {
         TicketDAO ticketDAO = new TicketDAO();
         LocalDateTime checkIn = null;
         try {
-            checkIn = ticketDAO.getCheckInByTicketID(1);
+            checkIn = ticketDAO.getCheckInByTicketID(TransferTicket.getTicketID());
         } catch (SQLException sqlException) {
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setContentText("Error al recuperar el ticket");
@@ -56,7 +56,7 @@ public class CheckOutController {
         TicketDAO ticketDAO = new TicketDAO();
         int result = 0;
         try {
-            result = ticketDAO.getSlotIDByTicketID(comboBoxParkingPlace.getValue());
+            result = ticketDAO.getSlotIDByTicketID(TransferTicket.getTicketID());
         } catch (SQLException sqlException) {
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setContentText("Error al recuperar el lugar de estacionamiento");
@@ -68,33 +68,18 @@ public class CheckOutController {
 
     @FXML
     private void fillTicket() {
-        if (comboBoxParkingPlace.getSelectionModel().getSelectedItem() != null) {
-            labelCheckOut.setText("CheckOut: " + dateTimeFormatter.format(LocalDateTime.now()));
-            labelParkingSlotID.setText("Lugar de estacionamiento: " + getSlotID());
-            labelPaymentTotal.setText("Total a pagar: $" + getTotalPayment());
-        }
-    }
-
-    private void fillComboBoxParkingSlots() {
-        TicketDAO ticketDAO = new TicketDAO();
-        try {
-            comboBoxParkingPlace.setItems(
-                    FXCollections.observableList(ticketDAO.getTicketsWithoutPay()));
-        } catch (SQLException sqlException) {
-            Alert error = new Alert(Alert.AlertType.ERROR);
-            error.setContentText("Error al recuperar el lugares de estacionamiento por pagar");
-            error.showAndWait();
-            sqlException.printStackTrace();
-        }
+        labelCheckOut.setText("CheckOut: " + dateTimeFormatter.format(LocalDateTime.now()));
+        labelParkingSlotID.setText("Lugar de estacionamiento: " + getSlotID());
+        labelPaymentTotal.setText("Total a pagar: $" + getTotalPayment());
     }
 
     @FXML
-    private void pay() {
+    private void pay() throws IOException {
         PaymentDAO paymentDAO = new PaymentDAO();
 
         int result = 0;
         try {
-            result = paymentDAO.updatePayment(comboBoxParkingPlace.getValue());
+            result = paymentDAO.updatePayment(TransferTicket.getTicketID());
         } catch (SQLException sqlException) {
             Alert error = new Alert(Alert.AlertType.ERROR);
             error.setContentText("Error al conectarse con la base de datos");
@@ -106,12 +91,10 @@ public class CheckOutController {
             Alert error = new Alert(Alert.AlertType.INFORMATION);
             error.setContentText("Pago hecho correctamente");
             error.showAndWait();
-            comboBoxParkingPlace.getItems().clear();
-            comboBoxParkingPlace.getSelectionModel().clearSelection();
-            fillComboBoxParkingSlots();
             labelCheckOut.setText("CheckOut: ");
             labelParkingSlotID.setText("Lugar de estacionamiento: ");
             labelPaymentTotal.setText("Total a pagar: ");
+            MainStage.changeView("SlotsToPay.fxml", 1000, 700);
         }
 
     }

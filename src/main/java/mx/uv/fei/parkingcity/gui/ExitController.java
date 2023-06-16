@@ -70,7 +70,7 @@ public class ExitController {
         Duration duration = Duration.between(getPaymentDatetime(), LocalDateTime.now());
         long minutes = duration.toMinutes();
 
-        if (minutes <= 10) {
+        if (minutes <= 30) {
 
             text.setText("¡Vuelva pronto!");
             rectangle.setVisible(false);
@@ -103,6 +103,15 @@ public class ExitController {
 
         } else {
 
+            PaymentDAO paymentDAO = new PaymentDAO();
+            try {
+                paymentDAO.updatePaymentToPay(comboBoxTicket.getValue());
+            } catch (SQLException sqlException) {
+                Alert error = new Alert(Alert.AlertType.ERROR);
+                error.setContentText("Error al actualizar fecha de pago");
+                error.showAndWait();
+                sqlException.printStackTrace();
+            }
             text.setText("Tiempo vencido, pague de nuevo");
             rectangle.setVisible(false);
             straight.setVisible(false);

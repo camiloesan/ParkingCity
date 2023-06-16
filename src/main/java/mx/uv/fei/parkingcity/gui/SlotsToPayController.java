@@ -14,6 +14,7 @@ import mx.uv.fei.parkingcity.dao.ParkingSlotsDAO;
 import mx.uv.fei.parkingcity.dao.PaymentDAO;
 import mx.uv.fei.parkingcity.dao.TicketDAO;
 import mx.uv.fei.parkingcity.logic.ParkingSlot;
+import mx.uv.fei.parkingcity.logic.TransferTicket;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -170,6 +171,11 @@ public class SlotsToPayController {
                     alert.setContentText("El lugar no tiene ticket.");
                     alert.show();
                 } else {
+                    try {
+                        TransferTicket.setTicketID(ticketDAO.getTicketIDBySlotID(Integer.parseInt(slotIdText.getText())));
+                    } catch (SQLException ex) {
+                        throw new RuntimeException(ex);
+                    }
                     try {
                         MainStage.changeView("CheckOut.fxml", 1000, 700);
                     } catch (IOException ex) {

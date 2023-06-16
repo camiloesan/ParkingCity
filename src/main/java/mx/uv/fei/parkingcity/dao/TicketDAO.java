@@ -12,6 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
+import static java.time.LocalDateTime.parse;
+
 public class TicketDAO implements ITicketDAO{
     @Override
     public int registerEntry(int slotID) throws SQLException{
@@ -91,6 +93,27 @@ public class TicketDAO implements ITicketDAO{
     }
 
     @Override
+    public int getTicketIDBySlotID(int slotID) throws SQLException {
+        String query = "SELECT ticket_id FROM tickets WHERE slot_id = ?";
+        DatabaseManager databaseManager = new DatabaseManager();
+        Connection connection = databaseManager.getConnection();
+
+        PreparedStatement preparedStatement = connection.prepareStatement(query);
+
+        preparedStatement.setInt(1, slotID);
+        ResultSet resultSet = preparedStatement.executeQuery();
+
+        int result = 0;
+        while (resultSet.next()) {
+            result = resultSet.getInt("ticket_id");
+        }
+
+        databaseManager.closeConnection();
+
+        return result;
+    }
+
+    @Override
     public LocalDateTime getCheckInByTicketID(int ticketID) throws SQLException {
         String query = "SELECT check_in FROM tickets WHERE ticket_id = ?";
         DatabaseManager databaseManager = new DatabaseManager();
@@ -105,7 +128,7 @@ public class TicketDAO implements ITicketDAO{
         while (resultSet.next()) {
             checkIn = resultSet.getString("check_in");
         }
-        LocalDateTime result = LocalDateTime.parse(checkIn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+        LocalDateTime result = parse(checkIn, DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
 
         databaseManager.closeConnection();
 
